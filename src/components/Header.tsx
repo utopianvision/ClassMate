@@ -1,16 +1,71 @@
-import React from 'react'
-import { Bell, LogOut, User } from 'lucide-react'
+import React, { useEffect, useState } from 'react';
+import { Bell, LogOut, User } from 'lucide-react';
+import { apiClient } from '../api/client'; // Import apiClient
+import { LoadingSpinner } from '../components/LoadingSpinner'; // Import LoadingSpinner
+
 interface HeaderProps {
-  user: any
-  onLogout: () => void
+  user: any;
+  onLogout: () => void;
 }
+
 export function Header({ user, onLogout }: HeaderProps) {
+  const [localUser, setLocalUser] = useState<any>(null); // Local state for user data
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const userData = await apiClient.getUser();
+        setLocalUser(userData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load user data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Welcome back, Loading...
+            </h2>
+          </div>
+          <div>
+            <LoadingSpinner size="sm" />
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  if (error) {
+    return (
+      <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Error loading user data
+            </h2>
+            <p className="text-red-500">{error}</p>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">
-            Welcome back, {user?.name || 'Student'}!
+            Welcome back, {localUser?.name || 'Student'}!
           </h2>
           <p className="text-sm text-gray-600">
             {new Date().toLocaleDateString('en-US', {
@@ -29,10 +84,10 @@ export function Header({ user, onLogout }: HeaderProps) {
           </button>
 
           <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-            {user?.avatar ? (
+            {localUser?.avatar ? (
               <img
-                src={user.avatar}
-                alt={user.name}
+                src={localUser.avatar}
+                alt={localUser.name}
                 className="w-10 h-10 rounded-full"
               />
             ) : (
@@ -42,10 +97,10 @@ export function Header({ user, onLogout }: HeaderProps) {
             )}
             <div className="text-sm">
               <p className="font-medium text-gray-900">
-                {user?.name || 'Student'}
+                {localUser?.name || 'Student'}
               </p>
               <p className="text-gray-600">
-                {user?.email || ''}
+                {localUser?.email || ''}
               </p>
             </div>
           </div>
@@ -60,5 +115,5 @@ export function Header({ user, onLogout }: HeaderProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }

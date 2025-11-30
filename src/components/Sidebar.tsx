@@ -42,7 +42,7 @@ export function Sidebar({
             <Brain className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">StudySync</h1>
+            <h1 className="text-xl font-bold text-gray-900">ClassMate</h1>
             <p className="text-xs text-gray-500">Smart Schedule Manager</p>
           </div>
         </div>

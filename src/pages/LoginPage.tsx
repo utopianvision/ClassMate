@@ -59,7 +59,7 @@ export function LoginPage({
             <Brain className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome to StudySync
+            Welcome to ClassMate
           </h1>
           <p className="text-gray-600">
             Connect your Canvas account to get started
@@ -121,7 +121,7 @@ export function LoginPage({
 
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-xs text-center text-gray-500">
-              By connecting, you agree to allow StudySync to access your Canvas
+              By connecting, you agree to allow ClassMate to access your Canvas
               data to provide personalized study recommendations
             </p>
           </div>
