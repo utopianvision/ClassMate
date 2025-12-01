@@ -1,4 +1,4 @@
-import { Home, BookOpen, CheckSquare, Calendar, Brain, Settings, LogOut, Bot } from 'lucide-react';
+import { Home, BookOpen, CheckSquare, Calendar, Brain, Settings, LogOut, Bot, Mic } from 'lucide-react';
 type Page = 'dashboard' | 'courses' | 'assignments' | 'calendar' | 'study-plan' | 'settings' | 'chat'; // Add 'chat'
 interface SidebarProps {
   currentPage: Page;
@@ -29,6 +29,10 @@ const navigation = [{
   name: 'Chat',
   icon: Bot,
   path: 'chat' as Page
+}, {
+  name: 'Notetaker',
+  icon: Mic,
+  path: 'notetaker' as Page
 }, {
   name: 'Settings',
   icon: Settings,

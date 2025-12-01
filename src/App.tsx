@@ -9,9 +9,10 @@ import { StudyPlanPage } from './pages/StudyPlanPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { apiClient, getSessionId, clearSessionId } from './api/client';
 import { Course, Assignment } from './types';
-import ChatPage from './pages/ChatPage'; // Import ChatPage
+import ChatPage from './pages/ChatPage';
+import NoteTakerPage from './pages/NoteTakerPage'; // Import NoteTakerPage
 
-type Page = 'login' | 'dashboard' | 'courses' | 'assignments' | 'calendar' | 'study-plan' | 'settings' | 'chat'; // Add 'chat'
+type Page = 'login' | 'dashboard' | 'courses' | 'assignments' | 'calendar' | 'study-plan' | 'settings' | 'chat' | 'notetaker'; // Add 'notetaker'
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<Page>('login');
@@ -120,7 +121,9 @@ export function App() {
       case 'settings':
         return <SettingsPage />;
       case 'chat':
-        return <ChatPage />; // Add ChatPage route
+        return <ChatPage />;
+      case 'notetaker':
+        return <NoteTakerPage />; // Add NoteTakerPage route
       default:
         return (
           <DashboardPage
