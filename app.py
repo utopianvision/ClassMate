@@ -11,9 +11,10 @@ app = Flask(__name__)
 CORS(app)
 
 # Configure Gemini
-GEMINI_API_KEY = "AIzaSyAJ3Q1UmCcfTAwXIueBCmc-GTYlnKCg-Sk"
+GEMINI_API_KEY = ""
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')
+chat = model.start_chat() # Start a chat session
 
 # Store active Canvas sessions
 canvas_sessions = {}
@@ -363,6 +364,22 @@ def logout():
         del canvas_sessions[session_id]
     
     return jsonify({'success': True})
+
+
+@app.route('/api/chat', methods=['POST'])
+def chat_endpoint():
+    data = request.get_json()
+    message = data.get('message')
+
+    if not message:
+        return jsonify({'error': 'Message is required'}), 400
+
+    try:
+        response = chat.send_message(message) # Use chat.send_message
+        reply = response.text
+        return jsonify({'reply': reply})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':

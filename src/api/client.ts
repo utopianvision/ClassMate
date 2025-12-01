@@ -96,6 +96,12 @@ class ApiClient {
       body: JSON.stringify({ startDate, endDate }),
     })
   }
+  async sendMessageToChatbot(message: string) {
+    return this.request<{ reply: string }>('/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    });
+  }
 }
 
 export const apiClient = new ApiClient()

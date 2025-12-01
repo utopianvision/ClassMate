@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Layout } from './components/Layout';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -9,8 +9,9 @@ import { StudyPlanPage } from './pages/StudyPlanPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { apiClient, getSessionId, clearSessionId } from './api/client';
 import { Course, Assignment } from './types';
+import ChatPage from './pages/ChatPage'; // Import ChatPage
 
-type Page = 'login' | 'dashboard' | 'courses' | 'assignments' | 'calendar' | 'study-plan' | 'settings';
+type Page = 'login' | 'dashboard' | 'courses' | 'assignments' | 'calendar' | 'study-plan' | 'settings' | 'chat'; // Add 'chat'
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<Page>('login');
@@ -19,19 +20,25 @@ export function App() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const isMounted = useRef(true);
 
-  // Check for existing session on mount
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   useEffect(() => {
     const sessionId = getSessionId();
     if (sessionId) {
-      apiClient.getUser() // Validate sessionId with backend
+      apiClient.getUser()
         .then(userData => {
           setIsAuthenticated(true);
           setCurrentPage('dashboard');
           loadData();
           setUser(userData);
         })
-        .catch(() => { // Backend unreachable or sessionId invalid
+        .catch(() => {
           clearSessionId();
           setIsAuthenticated(false);
           setCurrentPage('login');
@@ -47,12 +54,17 @@ export function App() {
         apiClient.getCourses(),
         apiClient.getAssignments(),
       ]);
-      setCourses(coursesData);
-      setAssignments(assignmentsData);
+
+      if (isMounted.current) {
+        setCourses(coursesData);
+        setAssignments(assignmentsData);
+      }
     } catch (error) {
       console.error('Failed to load data:', error);
     } finally {
-      setIsLoadingData(false);
+      if (isMounted.current) {
+        setIsLoadingData(false);
+      }
     }
   };
 
@@ -60,8 +72,8 @@ export function App() {
     setIsAuthenticated(true);
     setCurrentPage('dashboard');
     await loadData();
-    const userData = await apiClient.getUser(); // Fetch user data
-    setUser(userData); // Store user data in state
+    const userData = await apiClient.getUser();
+    setUser(userData);
   };
 
   const handleLogout = async () => {
@@ -107,6 +119,8 @@ export function App() {
         return <StudyPlanPage />;
       case 'settings':
         return <SettingsPage />;
+      case 'chat':
+        return <ChatPage />; // Add ChatPage route
       default:
         return (
           <DashboardPage
@@ -133,3 +147,5 @@ export function App() {
     )
   );
 }
+
+export default App;
