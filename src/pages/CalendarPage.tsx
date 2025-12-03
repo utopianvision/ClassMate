@@ -161,7 +161,7 @@ export function CalendarPage({ courses, assignments }: CalendarPageProps) {
                 onClick={() => setSelectedAssignment(a)}
               >
                 <Badge
-                  variant={a.status === 'overdue' ? 'error' : a.status === 'submitted' ? 'success' : 'default'}
+                  variant={a.status === 'submitted' ? 'success' : a.status === 'upcoming' ? 'info' : 'default'}
                   size="sm"
                 >
                   {a.status}
